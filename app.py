@@ -36,14 +36,32 @@ def clean_player_data(players):
     return cleaned_players
 
 
+def sort_players_by_experience(players):
+    """Takes in a list of players and returns a tuple containing
+    a two lists, one holding the experienced players and one holding the inexperienced players."""
+
+    # uses  list comprehensions for quick list creation
+    experienced_players = [player for player in players if player['experience']]
+    inexperienced_players = [player for player in players if player['experience'] is False]
+
+    return experienced_players, inexperienced_players
+
+
+def make_balanced_teams(players):
+    balanced_team_1 = []
+    balanced_team_2 = []
+    balanced_team_3 = []
+
 PLAYERS = constants.PLAYERS
 TEAMS = constants.TEAMS
 
+
 basket_ball_players = []
+basket_ball_teams = []
 
 if __name__ == "__main__":
     basket_ball_players = clean_player_data(PLAYERS)
 
-    print(basket_ball_players)
+    print(sort_players_by_experience(basket_ball_players)[0])
 
 
