@@ -106,8 +106,6 @@ def menu_one(teams, team_names):
     display_team = """\n1) {}\n2) {}\n3) {}""".format(team_names[0],
                                                  team_names[1], team_names[2])
 
-    using_app = True
-
     print(interface_heading)
     print(menu)
     print(user_options)
@@ -115,23 +113,25 @@ def menu_one(teams, team_names):
     user_menu_selection = input(user_prompt)
 
     """
-    Tests the users given input and calls menu_two if the correct input was given
-    if the correct input was not given then an error message is given and 
-    menu_one is called again."""
+    Tests the users given input and returns the user_menu_selection if the users input was a valid menu selection
+    if the correct input was not given then an error message is given and 0 is returned"""
     try:
         user_menu_selection = test_input(int(user_menu_selection))
 
     except ValueError:
         print(user_menu_selection)
-        menu_one(teams, team_names)
+        return 0
 
     else:
         if user_menu_selection != 1 and user_menu_selection != 2:
             print("\nPlease select choose option 1) or 2)")
-            menu_one(teams, team_names)
+            return 0
 
     if user_menu_selection == 1:
-        menu_two(teams, team_names)
+        return user_menu_selection
+
+    elif user_menu_selection == 2:
+        return user_menu_selection
 
 
 def menu_two(teams, team_names):
@@ -148,22 +148,20 @@ def menu_two(teams, team_names):
         user_menu_selection2 = test_input(int(user_menu_selection))
     except ValueError:
         print(user_menu_selection2)
-        menu_two(teams, team_names)
+        return 0
     else:
         if user_menu_selection2 != 1 and user_menu_selection2 != 2 and user_menu_selection2 != 3:
             print("\nPlease select choose option 1), 2) or 3)")
-            menu_two(teams, team_names)
+            return 0
 
         elif user_menu_selection2 == 1:
-            display_stats(teams, team_names, 0)
+            return 1
 
         elif user_menu_selection2 == 2:
-            display_stats(teams, team_names, 1)
+            return 2
 
         elif user_menu_selection2 == 3:
-            display_stats(teams, team_names, 2)
-
-    menu_one(teams, team_names)
+            return 3
 
 
 def display_stats(teams, team_names, index):
@@ -179,7 +177,7 @@ def display_stats(teams, team_names, index):
     player_guardians = "\nGuardians:\n {}"
 
     average_height_display = "\nAverage Height: {}"
-    continue_prompt = "\nEnter Any key + Enter to continue..."
+    continue_prompt = "\nEnter any key + Enter to continue."
 
     number_of_experienced_players = len([player for player in team if player['experience'] is True])
     number_of_inexperienced_players = len([player for player in team if player['experience'] is False])
@@ -210,7 +208,29 @@ def display_stats(teams, team_names, index):
     # take an input from the user so that there can be delay between the last output
     # and the reprinting of menu one
     input(continue_prompt)
-    menu_one(teams, team_names)
+
+
+def run(teams, team_names):
+
+    menu1 = True
+
+    # The outer loop runs until the user inputs 2,
+    # the inner loop will only run if the user inputs 1
+    # that way the outer loop will continue to run if the user gives bad inputs
+    while menu1:
+        selection = menu_one(teams, team_names)
+        if selection == 2:
+            menu1 = False
+        elif selection == 1:
+            menu2 = True
+
+            # inner loop will only stop execution if the user inputs 1, 2 or 3
+            # that way the loop will continue if the user gives bad inputs
+            while menu2:
+                selection = menu_two(teams, team_names)
+                if selection == 1 or selection == 2 or selection == 3:
+                    display_stats(teams, team_names, selection)
+                    menu2 = False
 
 
 # Setting up the variables before the app runs
@@ -225,4 +245,4 @@ if __name__ == "__main__":
     # clean the player date , make balance teams, and start the program.
     basket_ball_players = clean_player_data(PLAYERS)
     balanced_teams = make_balanced_teams(basket_ball_players)
-    menu_one(balanced_teams, TEAMS)
+    run(balanced_teams, TEAMS)
