@@ -1,5 +1,6 @@
 import constants
 
+
 # function declarations
 def clean_player_data(players):
     """Iterates through a given list of dictionaries and
