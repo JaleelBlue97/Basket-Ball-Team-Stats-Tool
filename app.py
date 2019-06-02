@@ -144,6 +144,7 @@ def menu_two(teams, team_names):
 
     print(display_team)
     user_menu_selection = input(user_prompt)
+    user_menu_selection2 = ""
     try:
         user_menu_selection2 = test_input(int(user_menu_selection))
     except ValueError:
